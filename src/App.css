@@ -1,10 +1,4 @@
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
 
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafb);
-}
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -12,7 +6,7 @@
   font-weight: 400;
 
   color: #0f0f0f;
-  background-color: #f6f6f6;
+  background-color: #c7c7c7;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -26,57 +20,22 @@
   padding: 2rem;
   text-align: center;
   min-height: 100vh;
-  background-color: #ffffff;
+  background: radial-gradient(circle, #f8f8f8, #c7c7c7);;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
-  color: #000000;
-  margin-bottom: 2rem;
-}
-
-h2 {
-  color: #000000;
-  margin-bottom: 1rem;
-}
 
 input,
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid black;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   color: #0f0f0f;
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
   margin: 0.5rem;
 }
 
@@ -109,6 +68,12 @@ button:active {
 input,
 button {
   outline: none;
+}
+input:focus {
+  outline: none; 
+  border-color: #4a90e2; 
+  box-shadow: 2px 2px 3px rgba(74, 144, 226, 0.5); 
+  background-color: #d1d1d1; 
 }
 
 #greet-input {

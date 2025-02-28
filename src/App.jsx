@@ -186,16 +186,15 @@ function App() {
   // Render
   return (
     <div className="container">
-      <div className="manual-inputs">
-        <h2>Ввод данных вручную</h2>
+      <div className="manual-inputs">       
         <div className="input-group">
           <div className="input-row">
-            <input type="number" placeholder="Ширина" value={manualData.width} onChange={updateManualData('width')} />
-            <input type="number" placeholder="Длина" value={manualData.length} onChange={updateManualData('length')} />
+            <input type="number" placeholder="Ширина" value={manualData.width} onChange={updateManualData('width')} min="0" required />
+            <input type="number" placeholder="Длина" value={manualData.length} onChange={updateManualData('length')} min="0" required />
           </div>
           <div className="input-row">
-            <input type="number" placeholder="Толщина (необязательно)" value={manualData.thickness} onChange={updateManualData('thickness')} />
-            <input type="number" placeholder="Количество (необязательно)" value={manualData.quantity} onChange={updateManualData('quantity')} />
+            <input type="number" placeholder="Толщина (необязательно)" value={manualData.thickness} onChange={updateManualData('thickness')} min="0" />
+            <input type="number" placeholder="Количество (необязательно)" value={manualData.quantity} onChange={updateManualData('quantity')} min="0" />
           </div>
           <div className="input-row">
             <button onClick={handleManualDXFSave} className="save-button">Сохранить DXF</button>
