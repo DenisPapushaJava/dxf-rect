@@ -192,7 +192,8 @@ function App() {
         }
     };
 
-    const handleFileDelete = () => {
+    const handleFileDelete = (event) => {
+        event.stopPropagation();
         setExcelFileName('');
         setExcelData([]);
         setProcessingStatus(null);
