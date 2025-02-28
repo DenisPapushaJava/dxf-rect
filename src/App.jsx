@@ -213,7 +213,7 @@ function App() {
           onClick={handleFileSelect}
         >
           <div className="excel-upload-content">
-            <div className="excel-icon"><img src="..\src-tauri\icons\excel-96.png"/></div>
+            <div className="excel-icon">📊</div>
             <p className="excel-upload-text">кликните для выбора Excel файла</p>
             {excelFileName && (
               <div className="excel-file-name">
