@@ -9,6 +9,7 @@ import "./App.css";
 // Утилитные функции
 const createDrawing = (width, length) => {
   const d = new Drawing();
+  d.setUnits("Millimeters")
   d.addLayer(0, Drawing.ACI.WHITE, 'CONTINUOUS');
   d.setActiveLayer(0);
   d.drawRect(0, 0, width, length);
