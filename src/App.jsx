@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { read, utils } from 'xlsx';
 import Drawing from 'dxf-writer';
 import { save, open } from '@tauri-apps/api/dialog';
 import { writeTextFile, readBinaryFile } from '@tauri-apps/api/fs';
+import { listen } from '@tauri-apps/api/event'; // Для Tauri событий
 import "./App.css";
 
-// Utility functions
+// Утилитные функции
 const createDrawing = (width, length) => {
   const d = new Drawing();
   d.addLayer(0, Drawing.ACI.WHITE, 'CONTINUOUS');
@@ -34,7 +35,7 @@ const saveDXFContent = async (dxfContent, defaultFileName) => {
 };
 
 function App() {
-  // State
+  // Состояние
   const [manualData, setManualData] = useState({
     width: '',
     length: '',
@@ -42,12 +43,11 @@ function App() {
     thickness: ''
   });
   const [status, setStatus] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
   const [excelFileName, setExcelFileName] = useState('');
   const [processingStatus, setProcessingStatus] = useState(null);
   const [excelData, setExcelData] = useState([]);
 
-  // Handlers
+  // Обработчики
   const updateManualData = (field) => (e) => {
     setManualData(prev => ({ ...prev, [field]: e.target.value }));
   };
@@ -92,12 +92,6 @@ function App() {
     }
   };
 
-  const handleDrop = async (e) => {
-    e.preventDefault();
-    setIsDragging(false);
-    await processFile(e.dataTransfer.files[0]);
-  };
-
   const handleFileSelect = async () => {
     try {
       const selected = await open({
@@ -112,16 +106,6 @@ function App() {
     } catch (error) {
       setProcessingStatus({ type: 'error', message: `Ошибка выбора файла: ${error.message}` });
       console.error('File selection error:', error);
-    }
-  };
-
-  const processFile = async (file) => {
-    if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
-      setExcelFileName(file.name);
-      const fileData = await readBinaryFile(file.path);
-      await processExcelData(fileData);
-    } else {
-      setProcessingStatus({ type: 'error', message: 'Пожалуйста, выберите файл Excel (.xlsx или .xls)' });
     }
   };
 
@@ -183,10 +167,33 @@ function App() {
     setStatus('Excel файл удален и таблица очищена.');
   };
 
-  // Render
+  // Настройка Tauri drag-and-drop
+  useEffect(() => {
+    const unlisten = listen('tauri://file-drop', async (event) => {
+      const filePaths = event.payload; // Массив путей к файлам
+      console.log("Dropped files:", filePaths);
+      if (filePaths.length > 0) {
+        const filePath = filePaths[0];
+        if (filePath.endsWith('.xlsx') || filePath.endsWith('.xls')) {
+          setExcelFileName(filePath.split('/').pop().split('\\').pop()); // Извлекаем имя файла
+          const fileData = await readBinaryFile(filePath);
+          await processExcelData(fileData);
+        } else {
+          setProcessingStatus({ type: 'error', message: 'Пожалуйста, выберите файл Excel (.xlsx или .xls)' });
+        }
+      }
+    });
+
+    // Очистка слушателя при размонтировании
+    return () => {
+      unlisten.then(f => f());
+    };
+  }, []);
+
+  // Рендеринг
   return (
     <div className="container">
-      <div className="manual-inputs">       
+      <div className="manual-inputs">
         <div className="input-group">
           <div className="input-row">
             <input type="number" placeholder="Ширина" value={manualData.width} onChange={updateManualData('width')} min="1" required />
@@ -204,16 +211,10 @@ function App() {
 
       <div className="excel-section">
         <h2>Загрузка Excel файла</h2>
-        <div
-          className={`excel-upload-section ${isDragging ? 'dragging' : ''}`}
-          onDrop={handleDrop}
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-          onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
-          onClick={handleFileSelect}
-        >
+        <div className="excel-upload-section" onClick={handleFileSelect}>
           <div className="excel-upload-content">
             <div className="excel-icon">📊</div>
-            <p className="excel-upload-text">кликните для выбора Excel файла</p>
+            <p className="excel-upload-text">Перетащите Excel файл сюда или кликните для выбора</p>
             {excelFileName && (
               <div className="excel-file-name">
                 {excelFileName}
@@ -260,7 +261,7 @@ function App() {
         </div>
       )}
 
-      <div className="status" style={{ color: '#000' }}>{status}</div>
+      <div className="status" style={{ color: 'red' }}>{status}</div>
     </div>
   );
 }

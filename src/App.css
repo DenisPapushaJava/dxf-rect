@@ -255,7 +255,7 @@ input:focus {
 }
 
 .excel-upload-section.dragging {
-  background-color: #e3f2fd;
+  background-color: #8bfd8b;
   border-color: #2570a4;
   transform: scale(1.02);
 }

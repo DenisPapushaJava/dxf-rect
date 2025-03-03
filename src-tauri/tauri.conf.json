@@ -17,7 +17,9 @@
       },
       "fs": {
         "all": true,
-        "scope": ["**"]
+        "scope": [
+          "**"
+        ]
       }
     },
     "bundle": {
@@ -62,6 +64,7 @@
         "height": 800,
         "resizable": true,
         "title": "DXF Rectangle Generator",
+        "label": "main",
         "width": 800
       }
     ]
