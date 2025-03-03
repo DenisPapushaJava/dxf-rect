@@ -236,6 +236,7 @@ function App() {
           <table>
             <thead>
               <tr>
+                <th>№</th>
                 <th>Ширина</th>
                 <th>Длина</th>
                 <th>Толщина</th>
@@ -246,6 +247,7 @@ function App() {
             <tbody>
               {excelData.map((row, index) => (
                 <tr key={index}>
+                  <td>{index + 1}</td>
                   <td>{row['Ширина']}</td>
                   <td>{row['Длина']}</td>
                   <td>{row['Толщина']}</td>
