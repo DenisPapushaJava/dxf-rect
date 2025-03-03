@@ -1,4 +1,3 @@
-
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
@@ -7,7 +6,6 @@
 
   color: #0f0f0f;
   background-color: #c7c7c7;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -18,9 +16,11 @@
 .container {
   margin: 0;
   padding: 2rem;
+  padding-bottom: 50px;
   text-align: center;
   min-height: 100vh;
-  background: radial-gradient(circle, #f8f8f8, #c7c7c7);;
+  background: radial-gradient(circle, #f8f8f8, #c7c7c7);
+  ;
 }
 
 
@@ -32,7 +32,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  
+
   margin: 0.5rem;
 }
 
@@ -54,7 +54,7 @@ button {
 }
 
 button:hover {
-  background-color: #2570a4;  
+  background-color: #2570a4;
 }
 
 button:active {
@@ -66,11 +66,12 @@ input,
 button {
   outline: none;
 }
+
 input:focus {
-  outline: none; 
-  border-color: #4a90e2; 
-  box-shadow: 2px 2px 3px rgba(74, 144, 226, 0.5); 
-  background-color: #d1d1d1; 
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 2px 2px 3px rgba(74, 144, 226, 0.5);
+  background-color: #d1d1d1;
 }
 
 #greet-input {
@@ -92,6 +93,7 @@ input:focus {
     color: #ffffff;
     background-color: #0f0f0f98;
   }
+
   button:active {
     background-color: #0f0f0f69;
   }
@@ -186,7 +188,8 @@ input:focus {
   border: 1px solid #ccc;
 }
 
-.data-table th, .data-table td {
+.data-table th,
+.data-table td {
   padding: 0.5rem;
   text-align: left;
   border: 1px solid #ccc;

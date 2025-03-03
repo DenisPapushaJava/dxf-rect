@@ -114,16 +114,18 @@ function App() {
     const length = parseFloat(row['Длина']);
     const thickness = row['Толщина'] ? parseFloat(row['Толщина']) : null;
     const quantity = row['Количество'] ? parseInt(row['Количество']) : null;
-
     try {
-      const d = createDrawing(width, length);
-      const fileName = generateFileName(width, length, thickness, quantity);
-      const filePath = await saveDXFContent(d.toDxfString(), fileName);
-
-      if (filePath) {
-        setStatus(`DXF файл сохранен: ${filePath}`);
+      if (isNaN(width) || isNaN(length)) {
+        throw new Error("В таблице нет корректных значений для длины и ширины");
       } else {
-        setStatus('Ошибка при сохранении файла.');
+        const d = createDrawing(width, length);
+        const fileName = generateFileName(width, length, thickness, quantity);
+        const filePath = await saveDXFContent(d.toDxfString(), fileName);
+        if (filePath) {
+          setStatus(`DXF файл сохранен: ${filePath}`);
+        } else {
+          setStatus('Ошибка при сохранении файла.');
+        }
       }
     } catch (error) {
       setStatus(`Ошибка при сохранении файла: ${error.message}`);
