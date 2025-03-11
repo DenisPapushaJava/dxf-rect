@@ -16,10 +16,15 @@ const createDrawing = (width, length) => {
   return d;
 };
 
-const generateFileName = (width, length, thickness, quantity) => {
-  let fileName = `${width}x${length}`;
-  if (thickness) fileName += `_${thickness}мм`;
-  if (quantity) fileName += `_${quantity}шт`;
+const generateFileName = (width, length, thickness, quantity, name) => {
+  let fileName;
+  if (name) {
+    fileName = `${name}_${thickness || ''}мм_${quantity || ''}шт`;
+  } else {
+    fileName = `${width}x${length}`;
+    if (thickness) fileName += `_${thickness}мм`;
+    if (quantity) fileName += `_${quantity}шт`;
+  }
   return `${fileName}.dxf`;
 };
 
@@ -41,7 +46,8 @@ function App() {
     width: '',
     length: '',
     quantity: '',
-    thickness: ''
+    thickness: '',
+    name: ''
   });
   const [status, setStatus] = useState('');
   const [excelFileName, setExcelFileName] = useState('');
@@ -67,12 +73,12 @@ function App() {
 
     try {
       const d = createDrawing(w, l);
-      const fileName = generateFileName(w, l, thk, qty);
+      const fileName = generateFileName(w, l, thk, qty, manualData.name);
       const filePath = await saveDXFContent(d.toDxfString(), fileName);
 
       if (filePath) {
         setStatus(`DXF файл сохранен: ${filePath}`);
-        setManualData({ width: '', length: '', quantity: '', thickness: '' });
+        setManualData({ width: '', length: '', quantity: '', thickness: '', name: '' });
       }
     } catch (error) {
       setStatus(`Ошибка при сохранении файла: ${error.message}`);
@@ -120,7 +126,7 @@ function App() {
         throw new Error("В таблице нет корректных значений для длины и ширины");
       } else {
         const d = createDrawing(width, length);
-        const fileName = generateFileName(width, length, thickness, quantity);
+        const fileName = generateFileName(width, length, thickness, quantity, row['Имя']);
         const filePath = await saveDXFContent(d.toDxfString(), fileName);
         if (filePath) {
           setStatus(`DXF файл сохранен: ${filePath}`);
@@ -150,7 +156,7 @@ function App() {
 
         if (!isNaN(width) && !isNaN(length)) {
           const d = createDrawing(width, length);
-          const fileName = generateFileName(width, length, thickness, quantity);
+          const fileName = generateFileName(width, length, thickness, quantity, row['Имя']);
           await writeTextFile(`${folderPath}/${fileName}`, d.toDxfString());
           savedFilesCount++;
         }
@@ -199,6 +205,9 @@ function App() {
       <div className="manual-inputs">
         <div className="input-group">
           <div className="input-row">
+            <input type="text" placeholder="Имя (необязательно)" value={manualData.name} onChange={updateManualData('name')} />
+          </div>
+          <div className="input-row">
             <input type="number" placeholder="Ширина" value={manualData.width} onChange={updateManualData('width')} min="1" required />
             <input type="number" placeholder="Длина" value={manualData.length} onChange={updateManualData('length')} min="1" required />
           </div>
@@ -240,6 +249,7 @@ function App() {
             <thead>
               <tr>
                 <th>№</th>
+                <th>Имя</th>
                 <th>Ширина</th>
                 <th>Длина</th>
                 <th>Толщина</th>
@@ -251,6 +261,7 @@ function App() {
               {excelData.map((row, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
+                  <td>{row['Имя'] || '-'}</td>
                   <td>{row['Ширина']}</td>
                   <td>{row['Длина']}</td>
                   <td>{row['Толщина']}</td>
