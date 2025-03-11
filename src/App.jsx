@@ -203,10 +203,7 @@ function App() {
   return (
     <div className="container">
       <div className="manual-inputs">
-        <div className="input-group">
-          <div className="input-row">
-            <input type="text" placeholder="Имя (необязательно)" value={manualData.name} onChange={updateManualData('name')} />
-          </div>
+        <div className="input-group">         
           <div className="input-row">
             <input type="number" placeholder="Ширина" value={manualData.width} onChange={updateManualData('width')} min="1" required />
             <input type="number" placeholder="Длина" value={manualData.length} onChange={updateManualData('length')} min="1" required />
