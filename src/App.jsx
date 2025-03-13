@@ -291,7 +291,6 @@ function App() {
       {status ? <div className="status">{status}
         <p className="status-close" onClick={closeStatus}>x</p>
       </div> : null}
-
     </div>
   );
 }
