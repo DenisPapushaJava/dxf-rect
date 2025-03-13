@@ -59,7 +59,7 @@ function App() {
   const updateManualData = (field) => (e) => {
     setManualData(prev => ({ ...prev, [field]: e.target.value }));
   };
-  const closeStatus = ()=>{
+  const closeStatus = () => {
     setStatus(() => "")
   }
 
@@ -85,8 +85,7 @@ function App() {
         setManualData({ width: '', length: '', quantity: '', thickness: '', name: '' });
       }
     } catch (error) {
-      setStatus(`Ошибка при сохранении файла: ${error.message}`);
-      console.error('Save error:', error);
+      setStatus(`Ошибка при сохранении файла: ${error.message}`);      
     }
   };
 
@@ -98,8 +97,7 @@ function App() {
       setExcelData(rows);
       setProcessingStatus({ type: 'success', message: 'Данные загружены из Excel.' });
     } catch (error) {
-      setProcessingStatus({ type: 'error', message: `Ошибка обработки файла: ${error.message}` });
-      console.error('Processing error:', error);
+      setProcessingStatus({ type: 'error', message: `Ошибка обработки файла: ${error.message}` });      
     }
   };
 
@@ -150,7 +148,6 @@ function App() {
         setStatus('Сохранение отменено.');
         return;
       }
-
       let savedFilesCount = 0;
       for (const row of excelData) {
         const width = parseFloat(row['Ширина']);
@@ -168,7 +165,6 @@ function App() {
       setStatus(`Все DXF файлы успешно сохранены! Количество файлов: ${savedFilesCount}.`);
     } catch (error) {
       setStatus(`Ошибка при сохранении файлов: ${error.message}`);
-      console.error('Ошибка при сохранении файлов:', error);
     }
   };
 
@@ -278,7 +274,7 @@ function App() {
         </div>
       )}
       {status ? <div className="status">{status}
-        <p className="status-close" onClick={closeStatus}>X</p>
+        <p className="status-close" onClick={closeStatus}>x</p>
       </div> : null}
 
     </div>
