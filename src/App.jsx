@@ -40,6 +40,7 @@ const saveDXFContent = async (dxfContent, defaultFileName) => {
   return null;
 };
 
+
 function App() {
   // Состояние
   const [manualData, setManualData] = useState({
@@ -58,6 +59,9 @@ function App() {
   const updateManualData = (field) => (e) => {
     setManualData(prev => ({ ...prev, [field]: e.target.value }));
   };
+  const closeStatus = ()=>{
+    setStatus(() => "")
+  }
 
   const handleManualDXFSave = async () => {
     const { width, length, quantity, thickness } = manualData;
@@ -203,7 +207,7 @@ function App() {
   return (
     <div className="container">
       <div className="manual-inputs">
-        <div className="input-group">         
+        <div className="input-group">
           <div className="input-row">
             <input type="number" placeholder="Ширина" value={manualData.width} onChange={updateManualData('width')} min="1" required />
             <input type="number" placeholder="Длина" value={manualData.length} onChange={updateManualData('length')} min="1" required />
@@ -273,8 +277,10 @@ function App() {
           <button onClick={saveAllDXFs} className="save-all-button">Сохранить все детали</button>
         </div>
       )}
+      {status ? <div className="status">{status}
+        <p className="status-close" onClick={closeStatus}>X</p>
+      </div> : null}
 
-      <div className="status" style={{ color: 'red' }}>{status}</div>
     </div>
   );
 }
