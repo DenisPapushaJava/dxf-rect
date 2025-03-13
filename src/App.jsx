@@ -16,17 +16,30 @@ const createDrawing = (width, length) => {
   return d;
 };
 
-const generateFileName = (width, length, thickness, quantity, name) => {
+const generateFileName = (width, length, thickness, quantity, name, usedNames = {}) => {
+  let baseName;
   let fileName;
+
   if (name) {
-    fileName = `${name}_${thickness || ''}мм_${quantity || ''}шт`;
+    baseName = `${name}_${thickness || ''}мм_${quantity || ''}шт`;
+    fileName = baseName;
   } else {
-    fileName = `${width}x${length}`;
-    if (thickness) fileName += `_${thickness}мм`;
-    if (quantity) fileName += `_${quantity}шт`;
-  }
+    baseName = `${width}x${length}`;
+    if (thickness) baseName += `_${thickness}мм`;
+    if (quantity) baseName += `_${quantity}шт`;
+    fileName = baseName;
+
+    let index = 1;
+    // Проверяем уникальность имени
+    while (usedNames[fileName]) {
+      fileName = `${baseName}__(${index})`;
+      index++;
+    }
+  }  // Помечаем имя как использованное
+  usedNames[fileName] = true;
+
   return `${fileName}.dxf`;
-};
+}
 
 const saveDXFContent = async (dxfContent, defaultFileName) => {
   const filePath = await save({
@@ -85,7 +98,7 @@ function App() {
         setManualData({ width: '', length: '', quantity: '', thickness: '', name: '' });
       }
     } catch (error) {
-      setStatus(`Ошибка при сохранении файла: ${error.message}`);      
+      setStatus(`Ошибка при сохранении файла: ${error.message}`);
     }
   };
 
@@ -97,7 +110,7 @@ function App() {
       setExcelData(rows);
       setProcessingStatus({ type: 'success', message: 'Данные загружены из Excel.' });
     } catch (error) {
-      setProcessingStatus({ type: 'error', message: `Ошибка обработки файла: ${error.message}` });      
+      setProcessingStatus({ type: 'error', message: `Ошибка обработки файла: ${error.message}` });
     }
   };
 
@@ -149,6 +162,8 @@ function App() {
         return;
       }
       let savedFilesCount = 0;
+      const usedNames = {}; // Объект для отслеживания использованных имен
+
       for (const row of excelData) {
         const width = parseFloat(row['Ширина']);
         const length = parseFloat(row['Длина']);
@@ -157,7 +172,7 @@ function App() {
 
         if (!isNaN(width) && !isNaN(length)) {
           const d = createDrawing(width, length);
-          const fileName = generateFileName(width, length, thickness, quantity, row['Имя']);
+          const fileName = generateFileName(width, length, thickness, quantity, row['Имя'], usedNames);
           await writeTextFile(`${folderPath}/${fileName}`, d.toDxfString());
           savedFilesCount++;
         }
